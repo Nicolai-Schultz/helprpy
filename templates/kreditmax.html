@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %} Kreditmax {% endblock %}
+{% block content %}
+
+<h1>Kreditmax</h1>
+    <div class="form-floating mb-3">
+        <input class="form-control" name ="number" id="number" type="number" placeholder="149" data-sb-validations="required,number" />
+        <label for="number">Indtast prisen på abonnement</label>
+        <div class="invalid-feedback" data-sb-feedback="number:required">Et tal skal skrives ind</div>
+    </div>
+
+    <div class="container">
+        <h1>Linked Pickers</h1>
+        <div class='col-md-4'>
+           <div class="form-group">
+              <div class='input-group date' id='startdato'>
+                 <input type='date' class="form-control" id="startdato" name="dato"/>
+                 <span class="input-group-addon">
+                 <span class="glyphicon glyphicon-calendar"></span>
+                 </span>
+              </div>
+           </div>
+        </div>
+        <div class='col-md-4'>
+           <div class="form-group">
+              <div class='input-group date' id='slutdato'>
+                 <input type='date' class="form-control" id="slutdato" name="dato"/>
+                 <span class="input-group-addon">
+                 <span class="glyphicon glyphicon-calendar"></span>
+                 </span>
+              </div>
+           </div>
+        </div>
+     </div>
+
+
+    
+
+    <p><div id="result"></div> <!-- Placeholder for displaying the result --></p>
+
+    <p><input type="submit" value="Beregn" /></p>
+
+    <button id="clearSession">Ryd</button>
+
+<form action="{{ url_for('kreditmax') }}" method="post"></form>
+      <button id="hidButton"> Skab H-ID </button>
+      <p><div id="result_hidbutton"></div> <!-- Placeholder for displaying the result --></p>
+      <input type="hidden" name="result_hidbutton" id="result_hidbutton_input">
+</form>
+
+
+{% with messages = get_flashed_messages()%}
+{% if messages%}
+{% for msg in messages %}
+<p>{{msg}}</p>
+{% endfor%}
+{% endif%}
+{% endwith%}
+
+<script src="{{ url_for('static', filename='kreditmax.js') }}"></script> <!-- Move the script here -->
+
+{% endblock %}
