@@ -1,37 +1,62 @@
 from flask import Flask, redirect, url_for, render_template, request, session, flash
 from datetime import timedelta
 from datetime import datetime
-from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import UserMixin
 
 
 app = Flask(__name__)
+db = SQLAlchemy(app)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.sql'
 app.static_folder = 'static'
-app.secret_key = "hello"
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.sqlite3'
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+#app.secret_key = "hello"
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.sqlite3'
+#app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config['SECRET_KEY'] = 'hejmeddig'
 app.permanent_session_lifetime = timedelta(days=1)
 
-db = SQLAlchemy(app)
 
-class users(db.Model):
+
+#første login database
+"""class users(db.Model):
     _id = db.Column("id",db.Integer, primary_key=True)
     name = db.Column(db.String(100))
     email = db.Column(db.String(100))
 
     def __init__(self, name, email):
         self.name = name
-        self.email = email
+        self.email = email"""
+
+class User(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(20), nullable=False)
+    password = db.Column(db.String(80), nullable=False)
 
 
 @app.route("/")
 def home():
     return render_template("index.html")
 
-@app.route("/view")
+@app.route("/hjem")
+def hjem():
+
+    return render_template("hjem.html")
+
+@app.route("/logind")
+def logind():
+
+    return render_template("logind.html")
+
+@app.route("/register")
+def register():
+
+    return render_template("register.html")
+
+
+"""@app.route("/view")
 def view():
     return render_template("view.html", values = users.query.all())
-
 @app.route("/login", methods=["POST","GET"])
 def login():
     if request.method == "POST":
@@ -90,7 +115,7 @@ def logout():
     session.pop("email", None)
     session.pop("hej", None)
     return redirect(url_for("login"))
-
+"""
 @app.route("/feedback")
 def feedback():
     return render_template("feedback.html")
@@ -105,8 +130,8 @@ def kreditmax():
     return render_template("kreditmax.html")
 
 if __name__ == "__main__":
-    with app.app_context():
-        db.create_all()
+    #with app.app_context():
+        #db.create_all()
     app.run(debug=True)
     
     
